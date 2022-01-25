@@ -1,12 +1,18 @@
 import patientsData from '../data/patients.json';
-import { NewPatient,UnparsedNewPatient,Patient } from "./types";
-import { parseDate, parseGender, parseName, parseOccupation, parseSsn } from "./utils";
+import { NewPatient,UnparsedNewPatient,Patient, UnparsedPatient } from "./types";
+import { parseDate, parseGender, parseId, parseName, parseOccupation, parseSsn } from "./utils";
 import {v1 as uuid} from 'uuid';
 
-const patients:Patient[] = patientsData;
-
-export const getPatients = ():Patient[] => {
-  return patients;
+export const toPatient = (obj:UnparsedPatient):Patient => {
+  const patient:Patient = {
+    id:parseId(obj.id),
+    name:parseName(obj.name),
+    dateOfBirth:parseDate(obj.dateOfBirth),
+    ssn:parseSsn(obj.ssn),
+    gender:parseGender(obj.gender),
+    occupation:parseOccupation(obj.occupation),
+  }
+  return patient;
 }
 
 export const toNewPatient = (obj:UnparsedNewPatient):NewPatient => {
@@ -27,3 +33,8 @@ export const addNewPatient = (patientData:UnparsedNewPatient):Patient => {
   return newPatient
 }
 
+const patients:Patient[] = patientsData.map(pd => toPatient(pd));
+
+export const getPatients = ():Patient[] => {
+  return patients;
+}

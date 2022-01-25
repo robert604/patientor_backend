@@ -1,4 +1,4 @@
-
+import {Gender} from './types';
 
 export const isString = (text:unknown):text is string => {
   return typeof text === 'string' || text instanceof String;
@@ -6,6 +6,10 @@ export const isString = (text:unknown):text is string => {
 
 export const isDate = (date:string):boolean => {
   return Boolean(Date.parse(date));
+}
+
+export const isGender = (gend:any):gend is Gender => {
+  return Object.values(Gender).includes(gend);
 }
 
 export const parseId = (id:unknown):string => {
@@ -36,8 +40,8 @@ export const parseSsn = (ssn:unknown):string => {
   return ssn;
 }
 
-export const parseGender = (gender:unknown):string => {
-  if(!gender || !isString(gender)) {
+export const parseGender = (gender:unknown):Gender => {
+  if(!gender || !isGender(gender)) {
     throw new Error('Invalid or missing gender')
   }
   return gender;
