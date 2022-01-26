@@ -16,18 +16,19 @@ export type Patient = {
   dateOfBirth:string,
   ssn:string,
   gender:Gender,
-  occupation:string
+  occupation:string,
+  entries:Entry[]
 }
 
-export type NewPatient = Omit<Patient,'id'>
+export type Entry = {
 
-export type UnparsedPatient = {
-  id:unknown,
-  name:unknown,
-  dateOfBirth:unknown,
-  ssn:unknown,
-  gender:unknown,
-  occupation:unknown
 }
 
-export type UnparsedNewPatient = Omit<UnparsedPatient,'id'>
+type UnknownPropTypes<T> = {[k in keyof T]:unknown};
+
+export type PublicPatient = Omit<Patient,'id' | 'entries'>;
+export type NewPatient = Omit<Patient,'id' | 'entries'>;
+
+export type UnparsedPatient = UnknownPropTypes<Patient>;
+export type UnparsedPublicPatient = UnknownPropTypes<PublicPatient>;
+export type UnparsedNewPatient = UnknownPropTypes<NewPatient>;

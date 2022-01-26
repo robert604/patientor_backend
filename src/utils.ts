@@ -1,4 +1,4 @@
-import {Gender} from './types';
+import {Gender,Entry} from './types';
 
 export const isString = (text:unknown):text is string => {
   return typeof text === 'string' || text instanceof String;
@@ -52,4 +52,11 @@ export const parseOccupation = (occupation:unknown):string => {
     throw new Error('Invalid or missing occupation')
   }
   return occupation;
+}
+
+export const parseEntries = (entries:unknown):Entry[] => {
+  if(!entries || !Array.isArray(entries)) {
+    throw new Error('Invalid or missing entries');
+  }
+  return entries;
 }
