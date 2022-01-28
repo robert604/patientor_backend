@@ -1,4 +1,4 @@
-import patientsData from '../data/patients.json';
+import patientsData from '../data/patients';
 import { PublicPatient,UnparsedPublicPatient,Patient, UnparsedPatient, UnparsedNewPatient,NewPatient,Entry } from "./types";
 import { parseDate, parseEntries, parseGender, parseId, parseName, parseOccupation, parseSsn } from "./utils";
 import {v1 as uuid} from 'uuid';
@@ -34,7 +34,7 @@ export const addNewPatient = (patientData:UnparsedNewPatient):Patient => {
   return newPatient
 }
 
-const patients:Patient[] = patientsData.map(pd => toPatient({...pd,entries:[]}));
+const patients:Patient[] = patientsData.map(pd => toPatient({...pd}));
 
 export const getPatients = ():Patient[] => {
   return patients;
@@ -44,3 +44,4 @@ export const findById = (id:string):Patient | undefined => {
   const patient = patients.find(p => p.id===id);
   return patient;
 }
+
