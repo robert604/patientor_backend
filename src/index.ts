@@ -3,7 +3,7 @@ const cors = require('cors');
 import { Diagnose,Patient } from './types';
 import diagnosesData from '../data/diagnoses.json';
 
-import { addNewPatient, findById, getPatients } from './patientService';
+import { addNewPatient, findPatientById, getPatients } from './patientService';
 
 const app = express();
 app.use(express.json());
@@ -50,7 +50,7 @@ app.post('/api/patients',(req,res) => {
 app.get('/api/patients/:id',(req,res) => {
   try {
     const id = req.params.id;
-    const patient = findById(id);
+    const patient = findPatientById(id);
     if(patient) res.status(200).json(patient);
     else res.status(400).send('Invalid patient id');
   } catch(error) {

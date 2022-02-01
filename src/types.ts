@@ -30,13 +30,7 @@ export type UnparsedPatient = UnknownPropTypes<Patient>;
 export type UnparsedPublicPatient = UnknownPropTypes<PublicPatient>;
 export type UnparsedNewPatient = UnknownPropTypes<NewPatient>;
 
-interface BaseEntry {
-  id: string,
-  description: string,
-  date: string,
-  specialist: string,
-  diagnosisCodes?: string[],
-}
+
 
 export enum HealthCheckRating {
   "Healthy" = 0,
@@ -45,13 +39,28 @@ export enum HealthCheckRating {
   "CriticalRisk" = 3
 }
 
+export enum EntryType {
+  "HealthCheck" = 0,
+  "OccupationalHealthcare" = 1,
+  "Hospital" = 2
+}
+
+export interface BaseEntry {
+  type:EntryType,
+  id: string,
+  description: string,
+  date: string,
+  specialist: string,
+  diagnosisCodes?: string[],
+}
+
 export interface HealthCheckEntry extends BaseEntry {
-  type: "HealthCheck";
+  type: EntryType.HealthCheck;
   healthCheckRating: HealthCheckRating;
 }
 
 export interface OccupationalHealthcareEntry extends BaseEntry {
-  type: "OccupationalHealthcare";
+  type: EntryType.OccupationalHealthcare;
   employerName: string;
   sickLeave?:{
     startDate:string,
@@ -60,7 +69,7 @@ export interface OccupationalHealthcareEntry extends BaseEntry {
 }
 
 export interface HospitalEntry extends BaseEntry {
-  type: "Hospital";
+  type: EntryType.Hospital;
   discharge: {
     date: string,
     criteria: string,
@@ -71,6 +80,8 @@ export type Entry =
   | HospitalEntry
   | OccupationalHealthcareEntry
   | HealthCheckEntry;
+
+export type UnparsedBaseEntry = UnknownPropTypes<BaseEntry>;
 
 type UnionOmit<T, K extends string | number | symbol> = T extends unknown ? Omit<T, K> : never;
 

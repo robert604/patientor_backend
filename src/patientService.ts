@@ -1,6 +1,8 @@
 import patientsData from '../data/patients';
-import { PublicPatient,UnparsedPublicPatient,Patient, UnparsedPatient, UnparsedNewPatient,NewPatient,Entry } from "./types";
-import { parseDate, parseEntries, parseGender, parseId, parseName, parseOccupation, parseSsn } from "./utils";
+import { PublicPatient,UnparsedPublicPatient,Patient, UnparsedPatient, UnparsedNewPatient,NewPatient,
+  BaseEntry,UnparsedBaseEntry,Entry, HealthCheckEntry, HealthCheckRating,EntryType,
+  OccupationalHealthcareEntry,HospitalEntry } from "./types";
+import { parseEntryType, parseDate, parseDescription, parseEntries, parseGender, parseHealthCheckRating, parseId, parseName, parseOccupation, parseSpecialist, parseSsn, parseString, parseDischarge } from "./utils";
 import {v1 as uuid} from 'uuid';
 
 export const toPatient = (obj:UnparsedPatient):Patient => {
@@ -40,8 +42,47 @@ export const getPatients = ():Patient[] => {
   return patients;
 }
 
-export const findById = (id:string):Patient | undefined => {
+export const findPatientById = (id:string):Patient | undefined => {
   const patient = patients.find(p => p.id===id);
   return patient;
 }
 
+export const toEntry =(obj:any):Entry => {
+  const baseEntry:BaseEntry = {
+    type : parseEntryType(obj.type),
+    id: parseId(obj.id),
+    description: parseDescription(obj.id),
+    date: parseDate(obj.date),
+    specialist: parseSpecialist(obj.specialist),
+  }
+  if(baseEntry.type===EntryType.HealthCheck) {
+    const hc_entry:HealthCheckEntry = { ...baseEntry,
+      type:EntryType.HealthCheck,
+      healthCheckRating:parseHealthCheckRating(obj.healthCheckRating)
+    };      
+    return hc_entry;
+  }
+  if(baseEntry.type===EntryType.OccupationalHealthcare) {
+    const oh_entry:OccupationalHealthcareEntry = { ...baseEntry,
+      type:EntryType.OccupationalHealthcare,
+      employerName:parseString(obj.employerName)
+    }
+    return oh_entry;
+  }
+  if(baseEntry.type===EntryType.Hospital) {
+    const h_entry:HospitalEntry = { ...baseEntry,
+      type:EntryType.Hospital,
+      discharge:parseDischarge(obj.discharge)
+    };      
+    return h_entry;
+  }
+  throw new Error('Invalid type for Entry ' + typeof obj);
+}
+
+export const addNewEntryByPatientId = (patientId:string,entry:any):Entry => {
+  const newEntry:Entry = entry;
+  const patient = findPatientById(patientId);
+  if(!patient) throw new Error(`Invalid patient id ${patientId}`);
+  patient.entries.push(newEntry);
+  return newEntry;
+}
