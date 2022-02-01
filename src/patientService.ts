@@ -1,6 +1,6 @@
 import patientsData from '../data/patients';
 import { PublicPatient,UnparsedPublicPatient,Patient, UnparsedPatient, UnparsedNewPatient,NewPatient,
-  BaseEntry,UnparsedBaseEntry,Entry, HealthCheckEntry, HealthCheckRating,EntryType,
+  BaseEntry,UnparsedBaseEntry,Entry, HealthCheckEntry, HealthCheckRating,
   OccupationalHealthcareEntry,HospitalEntry } from "./types";
 import { parseEntryType, parseDate, parseDescription, parseEntries, parseGender, parseHealthCheckRating, parseId, parseName, parseOccupation, parseSpecialist, parseSsn, parseString, parseDischarge } from "./utils";
 import {v1 as uuid} from 'uuid';
@@ -55,23 +55,23 @@ export const toEntry =(obj:any):Entry => {
     date: parseDate(obj.date),
     specialist: parseSpecialist(obj.specialist),
   }
-  if(baseEntry.type===EntryType.HealthCheck) {
+  if(baseEntry.type==="HealthCheck") {
     const hc_entry:HealthCheckEntry = { ...baseEntry,
-      type:EntryType.HealthCheck,
+      type:"HealthCheck",
       healthCheckRating:parseHealthCheckRating(obj.healthCheckRating)
     };      
     return hc_entry;
   }
-  if(baseEntry.type===EntryType.OccupationalHealthcare) {
+  if(baseEntry.type==="OccupationalHealthcare") {
     const oh_entry:OccupationalHealthcareEntry = { ...baseEntry,
-      type:EntryType.OccupationalHealthcare,
+      type:"OccupationalHealthcare",
       employerName:parseString(obj.employerName)
     }
     return oh_entry;
   }
-  if(baseEntry.type===EntryType.Hospital) {
+  if(baseEntry.type==="Hospital") {
     const h_entry:HospitalEntry = { ...baseEntry,
-      type:EntryType.Hospital,
+      type:"Hospital",
       discharge:parseDischarge(obj.discharge)
     };      
     return h_entry;

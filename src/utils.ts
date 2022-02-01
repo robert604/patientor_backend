@@ -1,5 +1,5 @@
 
-import {Gender,Entry, HealthCheckRating, EntryType} from './types';
+import {Gender,Entry, HealthCheckRating,entryTypes} from './types';
 
 export const assertNever = (x: never):never => {
   throw new Error("Unexpected type: " + typeof x);
@@ -98,8 +98,8 @@ export const parseHealthCheckRating = (rating:unknown):HealthCheckRating => {
   return rating;
 }
 
-export const parseEntryType = (entryType:any):EntryType => {
-  if(!Object.values(EntryType).includes(entryType)) {
+export const parseEntryType = (entryType:any):string => {
+  if(!entryTypes.includes(entryType)) {
     throw new Error("Invalid or missing EntryType");
   }
   return entryType;

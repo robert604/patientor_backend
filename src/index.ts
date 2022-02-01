@@ -3,7 +3,7 @@ const cors = require('cors');
 import { Diagnose,Patient } from './types';
 import diagnosesData from '../data/diagnoses.json';
 
-import { addNewPatient, findPatientById, getPatients } from './patientService';
+import { addNewPatient, findPatientById, getPatients,addNewEntryByPatientId } from './patientService';
 
 const app = express();
 app.use(express.json());
@@ -17,18 +17,18 @@ const diagnoses:Diagnose[] = diagnosesData;
 
 
 app.get('/api/ping',(req,res) => {
-  console.log('got a ping');
+  //console.log('got a ping');
   res.send('pong');
 })
 
 app.get('/api/diagnoses',(req,res) => {
-  console.log('got req diagnoses');
+  //console.log('got req diagnoses');
   const diags:Diagnose[] = diagnoses
   res.json(diags)
 })
 
 app.get('/api/patients',(req,res) => {
-  console.log('got req for patients');
+  //console.log('got req for patients');
   const pats:Omit<Patient,"ssn">[] = patients.map(p => {
     const {ssn,...withoutSsn} = p;
     return withoutSsn;
@@ -56,6 +56,20 @@ app.get('/api/patients/:id',(req,res) => {
   } catch(error) {
     let errorMessage = 'Unexpected error when getting patient data';
     if(error instanceof Error) errorMessage += ' Error: ' + error.message;
+    res.status(400).send(errorMessage);
+  }
+})
+
+app.post('/api/patients/:id/entries',(req,res) => {
+  try {
+  const id = req.params.id;
+  const entry = req.body;
+  console.log('adding entry',entry);
+  const saved = addNewEntryByPatientId(id,entry);
+  res.status(200).json(saved);  
+  } catch(error) {
+    let errorMessage = 'Unexpected error when adding entry';
+    if(error instanceof Error) errorMessage += 'Error: ' + error.message;
     res.status(400).send(errorMessage);
   }
 })
